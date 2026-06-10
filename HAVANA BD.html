@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday, Havana 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── DESIGN TOKENS ─────────────────────────────── */
+    :root {
+      --pink:       #d36f8f;
+      --pink-deep:  #D97FA0;
+      --sage:       #226e22;
+      --sage-light: #125012;
+      --cream:      #991658;
+      --ivory:      #3d228a;
+      --brown:      #e66756;
+      --text:       #31b416;
+      --gold:       #cc105e;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body:    'Jost', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ivory);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── PETALS CANVAS ─────────────────────────────── */
+    #petal-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HERO ──────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(242,181,200,0.25) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(168,190,168,0.20) 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--pink-deep);
+      letter-spacing: -0.01em;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--brown);
+    }
+
+    .hero-sub {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      font-style: italic;
+      color: var(--gold);
+      margin-top: 1.2rem;
+      font-weight: 300;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--pink);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: fadeInUp 2s ease 1.5s both;
+    }
+
+    .scroll-hint .line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--pink), transparent);
+      animation: grow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes grow {
+      0%, 100% { transform: scaleY(0.5); opacity: 0.4; }
+      50%       { transform: scaleY(1);   opacity: 1; }
+    }
+
+    /* ── MUSIC PLAYER ──────────────────────────────── */
+    .music-bar {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(253,249,244,0.92);
+      border: 1px solid var(--pink);
+      border-radius: 2rem;
+      padding: 0.6rem 1.2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(215,127,160,0.15);
+    }
+
+    .music-bar button {
+      background: var(--pink-deep);
+      border: none;
+      border-radius: 50%;
+      width: 36px; height: 36px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s, background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .music-bar button:hover { transform: scale(1.1); background: var(--brown); }
+
+    .music-info { display: flex; flex-direction: column; }
+
+    .music-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    .music-artist {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--pink-deep);
+    }
+
+    /* ── SECTIONS SHARED ───────────────────────────── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 1.5rem;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 300;
+      color: var(--brown);
+      margin-bottom: 3rem;
+    }
+
+    /* ── DIVIDER ───────────────────────────────────── */
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 0 auto 4rem;
+      max-width: 300px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--pink));
+    }
+
+    .divider::after {
+      background: linear-gradient(to left, transparent, var(--pink));
+    }
+
+    .divider span { color: var(--pink-deep); font-size: 1.2rem; }
+
+    /* ── LOVE LETTER ───────────────────────────────── */
+    .letter-section { background: var(--cream); }
+
+    .letter-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--ivory);
+      border: 1px solid rgba(242,181,200,0.4);
+      border-radius: 2px;
+      padding: clamp(2rem, 6vw, 4rem);
+      position: relative;
+      box-shadow:
+        0 2px 8px rgba(215,127,160,0.08),
+        0 20px 60px rgba(215,127,160,0.06);
+    }
+
+    .letter-card::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem; left: 1.5rem;
+      font-family: var(--font-display);
+      font-size: 8rem;
+      color: var(--pink);
+      opacity: 0.25;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .letter-salutation {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--pink-deep);
+      margin-bottom: 1.5rem;
+    }
+
+    .letter-body {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      line-height: 1.9;
+      color: var(--text);
+      white-space: pre-line;
+    }
+
+    .letter-sign {
+      margin-top: 2rem;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--gold);
+      text-align: right;
+    }
+
+    /* ── GALLERY ───────────────────────────────────── */
+    .gallery-section { background: var(--ivory); }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--sage-light);
+      cursor: pointer;
+      border: 1px solid rgba(168,190,168,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(215,127,160,0.18);
+    }
+
+    .gallery-item img {
+      width: 100%; 
+      height: 260px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img { transform: scale(1.04); }
+
+    .gallery-item .caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(74,58,58,0.7), transparent);
+      color: white;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.95rem;
+      padding: 1.5rem 1rem 0.75rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .gallery-item:hover .caption { opacity: 1; }
+
+    /* Placeholder saat belum ada foto */
+    .gallery-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--sage);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .gallery-placeholder .icon { font-size: 2rem; opacity: 0.5; }
+
+    /* ── LIGHTBOX ──────────────────────────────────── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(74,58,58,0.88);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: none; border: none;
+      color: white; font-size: 2rem;
+      cursor: pointer; opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    /* ── FOOTER ────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 3rem 1.5rem 4rem;
+      background: var(--cream);
+      z-index: 1;
+      position: relative;
+    }
+
+    .footer-flower { font-size: 2rem; margin-bottom: 1rem; }
+
+    .footer-wish {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.3rem, 4vw, 2rem);
+      color: var(--pink-deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-from {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--sage);
+      text-transform: uppercase;
+    }
+
+    /* ── ANIMATIONS ────────────────────────────────── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ────────────────────────────────── */
+    @media (max-width: 600px) {
+      .music-bar { right: 1rem; bottom: 1rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Falling petals -->
+<canvas id="petal-canvas"></canvas>
+
+<!-- ── MUSIC PLAYER ── -->
+<!-- 🎵 CARA EDIT: Ganti URL src di dalam audio tag dengan link lagu .mp3 milikmu -->
+<div class="music-bar">
+  <button id="play-btn" onclick="toggleMusic()">▶</button>
+  <audio id="bg-music" loop>
+    <!-- Ganti link ini dengan file MP3 kamu, bisa dari Google Drive (ubah ke direct link) -->
+    <source src="https://files.catbox.moe/9e9jk4.mp3" type="audio/mpeg">
+  </audio>
+  <div class="music-info">
+    <span class="music-title">🎵 NOW PLAYING</span>
+    <!-- 🎵 CARA EDIT: Ganti nama lagu dan artis di bawah ini -->
+    <span class="music-artist">Nama Lagu — Artis</span>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="eyebrow" style="animation: fadeInUp 1s ease 0.2s both;">untuk seseorang yang sangat istimewa</p>
+    <h1 style="animation: fadeInUp 1s ease 0.5s both;">
+      Happy<br><em>Birthday,</em><br>Havana
+      <!-- 🌸 CARA EDIT: Ganti "Havana" dengan nama panggilanmu -->
+    </h1>
+    <p class="hero-sub" style="animation: fadeInUp 1s ease 0.8s both;">
+      <!-- 🌸 CARA EDIT: Ganti dengan tanggal ulang tahunnya -->
+      · 10 Juni 2026 ·
+    </p>
+  </div>
+  <div class="scroll-hint">
+    <div class="line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- ── LOVE LETTER ── -->
+<section class="letter-section">
+  <div class="section-label fade-in">untuk kamu</div>
+  <h2 class="section-title fade-in">Sepucuk Surat</h2>
+  <div class="divider fade-in"><span>🌷</span></div>
+
+  <div class="letter-card fade-in">
+    <p class="letter-salutation"> Assalamualaikum, Babe </p>
+    <!-- 💌 CARA EDIT: Ganti seluruh isi di dalam letter-body dengan pesanmu sendiri -->
+    <p class="letter-body"> Alhamdulillah yaa sekarang kamu sudah kepala 23, 
+        aku bingung mau kaya gimana ajaa ucapannya yang jelass aku mau kamu sehat teruss intinya yang paling penting 
+        dan, hidup kamu berguna, bermakna gak cuma sekedar idup doang tapi ngasih banyak kesan dan impact ke sekitar kamu. 
+        Semoga kamu tetep istiqomah sama hubungan kamu sama Allah Swt dengan cara kamu sendiri. Dan kamu selalu seneng, 
+        bahagia kalopun lagi kena masalah musibah ataupun sedih semoga itu emang worth dan berarti buat kamu ga sia sia.
+        Yasudah intinyaa doa aku buat kamu semoga apa yang Tersemogakan segera tersemogakan. 
+Aamiinn
+Maaf yaa aku cuma baru bisa buatin ngasih kamu kaya gini</p>
+    <!-- 💌 CARA EDIT: Ganti nama di bawah dengan namamu -->
+    <p class="letter-sign">— Made by love, Rabat</p>
+  </div>
+</section>
+
+<!-- ── PUZZLE GALLERY ── -->
+<section class="gallery-section">
+  <div class="section-label fade-in">kenangan kita</div>
+  <h2 class="section-title fade-in">Susun Momen Kita 🧩</h2>
+  <div class="divider fade-in"><span>🌿</span></div>
+
+  <style>
+    /* ── PUZZLE UI ── */
+    .puzzle-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .puzzle-intro {
+      text-align: center;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    /* Foto selector tabs */
+    .puzzle-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .puzzle-tab {
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      border: 1px solid var(--pink);
+      background: transparent;
+      color: var(--brown);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .puzzle-tab.active,
+    .puzzle-tab:hover {
+      background: var(--pink-deep);
+      color: white;
+      border-color: var(--pink-deep);
+    }
+
+    /* Puzzle area */
+    .puzzle-area {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .puzzle-left { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+
+    .puzzle-board-wrap {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(215,127,160,0.15);
+    }
+
+    #puzzle-board {
+      display: grid;
+      gap: 2px;
+      background: var(--pink);
+    }
+
+    .p-slot {
+      width: var(--ps);
+      height: var(--ps);
+      background: var(--sage-light);
+      border: 2px dashed rgba(168,190,168,0.5);
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.1s;
+      position: relative;
+      background-clip: padding-box;
+    }
+
+    .p-slot.has-piece {
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .p-slot.selected-board {
+      border-color: var(--sage) !important;
+      transform: scale(1.04);
+      z-index: 2;
+    }
+
+    .p-slot.correct-piece {
+      border-color: var(--sage) !important;
+      box-shadow: inset 0 0 0 2px var(--sage);
+    }
+
+    /* Tray */
+    .puzzle-tray-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .tray-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage);
+      text-align: center;
+    }
+
+    #puzzle-tray {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      padding: 10px;
+      background: var(--cream);
+      border: 1px solid rgba(242,181,200,0.4);
+      border-radius: 4px;
+      min-width: 180px;
+    }
+
+    .t-piece {
+      border-radius: 2px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.15s, transform 0.15s;
+      flex-shrink: 0;
+    }
+
+    .t-piece:hover { border-color: var(--pink-deep); transform: scale(1.08); }
+    .t-piece.selected-tray { border-color: var(--pink-deep); transform: scale(1.1); box-shadow: 0 2px 8px rgba(215,127,160,0.3); }
+
+    /* Controls */
+    .puzzle-controls {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .pz-ctrl-btn {
+      padding: 0.45rem 1.1rem;
+      border-radius: 2rem;
+      border: 1px solid var(--pink);
+      background: var(--ivory);
+      color: var(--brown);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .pz-ctrl-btn:hover { background: var(--pink-deep); color: white; border-color: var(--pink-deep); }
+
+    .puzzle-progress {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: var(--brown);
+      text-align: center;
+    }
+
+    /* Win message */
+    .puzzle-win {
+      display: none;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      margin-top: 2rem;
+      background: var(--cream);
+      border: 1px solid rgba(242,181,200,0.5);
+      border-radius: 4px;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .win-flower { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+    .win-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: var(--pink-deep);
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+
+    .win-msg {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--brown);
+      font-style: italic;
+      line-height: 1.7;
+    }
+
+    /* Grid size for different grids */
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    @media (max-width: 600px) {
+      .puzzle-area { flex-direction: column; align-items: center; }
+      #puzzle-tray { grid-template-columns: repeat(3, 1fr); min-width: 140px; }
+    }
+  </style>
+
+  <div class="puzzle-wrapper fade-in">
+    <p class="puzzle-intro">Susun kepingan foto ini, dan temukan pesanku untukmu 💌</p>
+
+    <!-- Foto selector -->
+    <div class="puzzle-tabs" id="puzzle-tabs">
+      <!-- Dibuat otomatis oleh JS -->
+    </div>
+
+    <div class="puzzle-area">
+      <div class="puzzle-left">
+        <div class="puzzle-board-wrap">
+          <div id="puzzle-board"></div>
+        </div>
+        <div class="puzzle-controls">
+          <button class="pz-ctrl-btn" onclick="PZ.shuffle()">🔀 Acak</button>
+          <button class="pz-ctrl-btn" onclick="PZ.hint()">💡 Petunjuk</button>
+          <button class="pz-ctrl-btn" onclick="PZ.reset()">↩ Reset</button>
+        </div>
+        <div class="puzzle-progress" id="pz-progress">0 / 9 kepingan benar</div>
+      </div>
+
+      <div class="puzzle-tray-wrap">
+        <p class="tray-label">Kepingan</p>
+        <div id="puzzle-tray"></div>
+      </div>
+    </div>
+
+    <div class="puzzle-win" id="puzzle-win">
+      <div class="win-flower">🌸</div>
+      <p class="win-title" id="win-title">Foto 1</p>
+      <p class="win-msg" id="win-caption">Pesan untuk foto ini</p>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ═══════════════════════════════════════════════
+   PUZZLE ENGINE
+   ═══════════════════════════════════════════════
+   📸 CARA MENAMBAH FOTO:
+   Di array PHOTOS di bawah, tambahkan objek dengan:
+   - url   : link foto kamu (Google Drive / Imgur)
+   - label : nama tab (singkat)
+   - caption: pesan romantis yang muncul setelah puzzle selesai
+   - grid  : 3 (3x3=9 keping) atau 4 (4x4=16 keping)
+
+   Contoh format Google Drive:
+   url: "https://drive.google.com/uc?export=view&id=ID_FOTO_KAMU"
+   ═══════════════════════════════════════════════ */
+
+const PHOTOS = [
+  {
+    url: "https://i.imgur.com/SO71zV6.jpeg",
+    label: "Garut",
+    caption: "ini pas kita pertama kali jalan ke garutt, akhirnyaa kamu happy kann",
+    grid: 4
+  },
+  {
+    url: "https://i.imgur.com/my7Uh1o.jpeg",
+    label: "Made by U!",
+    caption: "ini hasil editan bikinan kamu, baguss pilihan kita juga kann keren",
+    grid: 4
+  },
+  {
+    url: "https://i.imgur.com/O0okJrX.jpeg",
+    label: "First time meet Umi",
+    caption: "aku belom tidur sepet banget ini",
+    grid: 4
+  },
+  {
+    url: "https://i.imgur.com/sReUo0j.jpeg",
+    label: "Kukis that make u HAPPY WKWK",
+    caption: "tapi gapapa seenggaknya kita full seharian hari ini, dari makan steak terus lanjut cari nescafe buat aku dan kesini, dan ini pas ulang taun kamu juga kan tapi telat aja celebratenya",
+    grid: 4
+  },
+  {
+    url: "https://i.imgur.com/iI7YQC9.jpeg",
+    label: "Second Time",
+    caption: "yang kedua kalinya kita kesini karnaa kamu mau liat liat aksesoris lucu buat wisuda kamu dan kita dapet bunga yang aku bawa kemana mana",
+    grid: 4
+  },
+  {
+    url: "https://i.imgur.com/Idr0d7d.jpeg",
+    label: "Last and Proud",
+    caption: "ini pas waktu kamu wisuda cantik banget!!",
+    grid: 4
+  },
+];
+
+/* ── Engine ── */
+const PZ = (() => {
+  const TRAY_SIZE = 56;
+  let grid = 3, pieceSize = 130, total = 9;
+  let boardState = [], trayPieces = [];
+  let selTray = null, selBoard = null;
+  let correctCount = 0;
+  let currentPhoto = null;
+
+  function init(photo) {
+    currentPhoto = photo;
+    grid = photo.grid || 3;
+    total = grid * grid;
+    pieceSize = grid === 4 ? 100 : 130;
+    correctCount = 0; selTray = null; selBoard = null;
+    buildBoard();
+    buildTray(shuffleArr(Array.from({length: total}, (_, i) => i)));
+    document.getElementById('puzzle-win').style.display = 'none';
+    updateProgress();
+  }
+
+  function shuffleArr(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildBoard() {
+    const board = document.getElementById('puzzle-board');
+    board.className = 'grid-' + grid;
+    board.style.setProperty('--ps', pieceSize + 'px');
+    board.innerHTML = '';
+    boardState = Array(total).fill(null);
+    for (let i = 0; i < total; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'p-slot';
+      slot.style.width = pieceSize + 'px';
+      slot.style.height = pieceSize + 'px';
+      slot.dataset.idx = i;
+      slot.onclick = () => handleBoard(i);
+      board.appendChild(slot);
+    }
+  }
+
+  function buildTray(order) {
+    const tray = document.getElementById('puzzle-tray');
+    tray.innerHTML = '';
+    trayPieces = order.map(origIdx => ({ origIdx, el: null }));
+    trayPieces.forEach((p, ti) => {
+      const el = document.createElement('div');
+      el.className = 't-piece';
+      el.style.width = TRAY_SIZE + 'px';
+      el.style.height = TRAY_SIZE + 'px';
+      applyBg(el, p.origIdx, TRAY_SIZE);
+      el.dataset.ti = ti;
+      el.onclick = () => handleTray(ti);
+      p.el = el;
+      tray.appendChild(el);
+    });
+  }
+
+  function applyBg(el, origIdx, size) {
+    const col = origIdx % grid;
+    const row = Math.floor(origIdx / grid);
+    el.style.backgroundImage = `url(${currentPhoto.url})`;
+    el.style.backgroundSize = (size * grid) + 'px ' + (size * grid) + 'px';
+    el.style.backgroundPosition = `-${col * size}px -${row * size}px`;
+  }
+
+  function handleTray(ti) {
+    const p = trayPieces[ti];
+    if (!p || !p.el) return;
+    if (selTray === ti) { clearSel(); return; }
+    clearSel();
+    selTray = ti;
+    p.el.classList.add('selected-tray');
+  }
+
+  function handleBoard(idx) {
+    const slots = document.getElementById('puzzle-board').children;
+    if (selTray !== null) {
+      const p = trayPieces[selTray];
+      if (!p || !p.el) { clearSel(); return; }
+      if (boardState[idx] !== null) { clearSel(); return; }
+      const slot = slots[idx];
+      applyBg(slot, p.origIdx, pieceSize);
+      slot.classList.add('has-piece');
+      boardState[idx] = p.origIdx;
+      if (p.origIdx === idx) { slot.classList.add('correct-piece'); correctCount++; }
+      p.el.remove(); p.el = null;
+      clearSel();
+      updateProgress();
+      if (correctCount === total) setTimeout(showWin, 500);
+    } else if (selBoard !== null) {
+      if (idx === selBoard) { clearSel(); return; }
+      const a = boardState[selBoard], b = boardState[idx];
+      boardState[selBoard] = b; boardState[idx] = a;
+      swapStyles(slots[selBoard], slots[idx], a, b);
+      recalc();
+      clearSel();
+      updateProgress();
+      if (correctCount === total) setTimeout(showWin, 500);
+    } else {
+      if (boardState[idx] === null) return;
+      selBoard = idx;
+      slots[idx].classList.add('selected-board');
+    }
+  }
+
+  function swapStyles(sA, sB, origA, origB) {
+    if (origA === null) {
+      sA.style.backgroundImage = ''; sA.style.backgroundPosition = '';
+      sA.style.backgroundSize = ''; sA.classList.remove('has-piece','correct-piece');
+    } else { applyBg(sA, origA, pieceSize); sA.classList.add('has-piece'); }
+    if (origB === null) {
+      sB.style.backgroundImage = ''; sB.style.backgroundPosition = '';
+      sB.style.backgroundSize = ''; sB.classList.remove('has-piece','correct-piece');
+    } else { applyBg(sB, origB, pieceSize); sB.classList.add('has-piece'); }
+  }
+
+  function recalc() {
+    correctCount = 0;
+    const slots = document.getElementById('puzzle-board').children;
+    boardState.forEach((v, i) => {
+      slots[i].classList.remove('correct-piece');
+      if (v !== null && v === i) { slots[i].classList.add('correct-piece'); correctCount++; }
+    });
+  }
+
+  function clearSel() {
+    selTray = null; selBoard = null;
+    document.querySelectorAll('.selected-tray,.selected-board').forEach(e => e.classList.remove('selected-tray','selected-board'));
+  }
+
+  function updateProgress() {
+    document.getElementById('pz-progress').textContent = correctCount + ' / ' + total + ' kepingan benar';
+  }
+
+  function showWin() {
+    const win = document.getElementById('puzzle-win');
+    document.getElementById('win-title').textContent = currentPhoto.label;
+    document.getElementById('win-caption').textContent = currentPhoto.caption;
+    win.style.display = 'block';
+    win.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  return {
+    load(photo) { init(photo); },
+    shuffle() {
+      const order = shuffleArr(Array.from({length: total}, (_, i) => i));
+      buildBoard();
+      buildTray(order);
+      document.getElementById('puzzle-win').style.display = 'none';
+      updateProgress();
+    },
+    reset() { init(currentPhoto); },
+    hint() {
+      const emptySlots = boardState.map((v, i) => v === null ? i : -1).filter(i => i >= 0);
+      const unmatchedTray = trayPieces.filter(p => p.el && p.origIdx < total);
+      if (emptySlots.length === 0 || unmatchedTray.length === 0) return;
+      const correctPair = unmatchedTray.find(p => emptySlots.includes(p.origIdx));
+      if (correctPair) {
+        selTray = correctPair.el.dataset.ti * 1;
+        correctPair.el.classList.add('selected-tray');
+        setTimeout(() => {
+          handleTray(selTray);
+          setTimeout(() => handleBoard(correctPair.origIdx), 300);
+        }, 400);
+      }
+    }
+  };
+})();
+
+/* ── Build tabs ── */
+function buildTabs() {
+  const wrap = document.getElementById('puzzle-tabs');
+  wrap.innerHTML = '';
+  PHOTOS.forEach((photo, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'puzzle-tab' + (i === 0 ? ' active' : '');
+    btn.textContent = photo.label;
+    btn.onclick = () => {
+      document.querySelectorAll('.puzzle-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      PZ.load(photo);
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+buildTabs();
+PZ.load(PHOTOS[0]);
+</script>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-flower">🌸</div>
+  <!-- 🌸 CARA EDIT: Ganti pesan penutup di bawah ini -->
+  <p class="footer-wish">Semoga harimu seindah dirimu</p>
+  <!-- 🌸 CARA EDIT: Ganti nama di bawah ini -->
+  <p class="footer-from">Love u Babe, from : Fikri, Klaus & Rabat</p>
+</footer>
+
+
+<script>
+  /* ── FALLING PETALS ─────────────────────────────── */
+  const canvas = document.getElementById('petal-canvas');
+  const ctx = canvas.getContext('2d');
+  let petals = [];
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const PETAL_COLORS = ['#F2B5C8','#D97FA0','#A8BEA8','#C8A882','#FAD4E0'];
+  const PETAL_SHAPES = ['🌸','🌷','🌺','🍃','✿'];
+
+  function spawnPetal() {
+    return {
+      x: Math.random() * canvas.width,
+      y: -30,
+      size: 12 + Math.random() * 14,
+      color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
+      shape: PETAL_SHAPES[Math.floor(Math.random() * PETAL_SHAPES.length)],
+      speed: 0.6 + Math.random() * 1.2,
+      drift: (Math.random() - 0.5) * 0.8,
+      spin: (Math.random() - 0.5) * 0.04,
+      angle: Math.random() * Math.PI * 2,
+      opacity: 0.5 + Math.random() * 0.5,
+      wobble: Math.random() * Math.PI * 2,
+      wobbleSpeed: 0.02 + Math.random() * 0.02,
+    };
+  }
+
+  for (let i = 0; i < 20; i++) {
+    const p = spawnPetal();
+    p.y = Math.random() * window.innerHeight;
+    petals.push(p);
+  }
+
+  function animatePetals() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (Math.random() < 0.03) petals.push(spawnPetal());
+
+    petals.forEach((p, i) => {
+      p.y += p.speed;
+      p.wobble += p.wobbleSpeed;
+      p.x += p.drift + Math.sin(p.wobble) * 0.5;
+      p.angle += p.spin;
+
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.font = `${p.size}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.shape, 0, 0);
+      ctx.restore();
+
+      if (p.y > canvas.height + 40) petals.splice(i, 1);
+    });
+
+    requestAnimationFrame(animatePetals);
+  }
+  animatePetals();
+
+  /* ── SCROLL REVEAL ──────────────────────────────── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  /* ── MUSIC PLAYER ───────────────────────────────── */
+  const audio = document.getElementById('bg-music');
+  const playBtn = document.getElementById('play-btn');
+  let playing = false;
+
+  function toggleMusic() {
+    if (playing) {
+      audio.pause();
+      playBtn.textContent = '▶';
+    } else {
+      audio.play().catch(() => {});
+      playBtn.textContent = '⏸';
+    }
+    playing = !playing;
+  }
+
+  /* ── LIGHTBOX ───────────────────────────────────── */
+  function openLightbox(el) {
+    const img = el.querySelector('img');
+    if (!img) return;
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
+// ...existing code...
